@@ -1,0 +1,35 @@
+\documentclass{amsart}
+\usepackage{fullpage}
+\usepackage[procnames]{listings}
+\usepackage{color}
+\newcommand{\set}[1]{\ensuremath{\left\{#1\right\}}}
+\newtheorem{quest}{Question}
+\usepackage{mathtools}
+\DeclarePairedDelimiter\norm{\lVert}{\rVert}%
+\begin{document}
+\title{CSE584 Homework}
+\author{Chen Sun\\cxs1031@psu.edu}
+\maketitle
+
+
+\section{Generalized LASSO}
+\begin{align*}
+	\min\limits_{x} \frac{1}{2}\norm{Ax-b}_2^2 + \lambda\norm{Fx}_1
+\end{align*}
+
+Using ADMM:
+
+\begin{align*}
+	\min\limits_{x} \frac{1}{2}\norm{Ax-b}_2^2 + \lambda\norm{z}_1\\
+	\text{subject to } Fx - z = 0
+\end{align*}
+
+So the updating in ADMM algorithm is 
+\begin{align*}
+	x^{k+1} &= (A_TA+\rho F^TF)^{-1}(A^Tb+\rho F^T(z^k-u^k))\\
+	z^{k+1} &= S_{\lambda/\rho}(Fx^{k+1}+u^k)\\
+	u^{k+1} &= u^k + Fx^{k+1} - z^{k+1}	
+\end{align*}
+
+
+\end{document}

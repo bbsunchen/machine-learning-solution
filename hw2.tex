@@ -1,0 +1,317 @@
+\documentclass{amsart}
+\usepackage{fullpage}
+\usepackage[procnames]{listings}
+\usepackage{color}
+\newcommand{\set}[1]{\ensuremath{\left\{#1\right\}}}
+\newtheorem{quest}{Question}
+\begin{document}
+\title{CSE584 Homework 2}
+\author{Chen Sun\\cxs1031@psu.edu}
+\maketitle
+
+\definecolor{keywords}{RGB}{255,0,90}
+\definecolor{comments}{RGB}{0,0,113}
+\definecolor{red}{RGB}{160,0,0}
+\definecolor{green}{RGB}{0,150,0}
+
+\lstset{language=Python, 
+	basicstyle=\ttfamily\small, 
+	keywordstyle=\color{keywords},
+	commentstyle=\color{comments},
+	stringstyle=\color{red},
+	showstringspaces=false,
+	identifierstyle=\color{green},
+	procnamekeys={def,class}}
+\section{Question 1}\label{sec:q1}
+\begin{lstlisting}
+# python 2.7
+def hw1(u, lambdavar):
+	# compute u_square and lambda_square
+	# set both to be float value for division
+	u_square = float(u*u)
+	lambda_square = float(lambdavar*lambdavar)
+	
+	#Case 1: when x = 0, the value of function:
+	f1 = u_square
+	#initialize 
+	argmin_x = 0
+	min_f = f1
+	
+	#Case 2: when x > 0, the argmin_x is:
+	x2 = float(u) - float(lambdavar)/2
+	f2 = u * lambdavar - lambda_square/4 #lambda_square is float value
+	
+	if x2 > 0: # if x1 <= 0, Case 2 can not be considered
+		if f2 < min_f:
+			argmin_x = x2
+			min_f = f2
+	
+	#Case 3: when x < 0, the argmin_x is 
+	x3 = float(u) + float(lambdavar)/2
+	f3 = -1 * u * lambdavar - lambda_square/4 #lambda_square float value
+	
+	if x3 < 0:
+		if f3 < min_f:
+			argmin_x = x3
+			min_f = f3
+	
+	return argmin_x
+
+ 
+\end{lstlisting}
+
+\section{Question 2}\label{sec:q2}
+
+Since X, Y and C are all binary variables, we have the following:\\
+
+(1)
+
+\begin{align*}
+	P(C|X,Y) &= \frac{P(C,X,Y)}{P(X,Y)} \\
+			&=\frac{P(Y|X)P(X|C)P(C)}{P(Y|X)P(X|C)P(C) + P(Y|X)P(X|\neg C)P(\neg C)}\\
+			&=\frac{P(X|C)P(C)}{P(X|C)P(C) + P(X|\neg C)P(\neg C)}
+\end{align*}
+	
+(2)
+\begin{align*}
+	P(C|X) &= \frac{P(X|C)P(C)}{P(X)}\\
+			&= \frac{P(X|C)P(C)}{P(X|C)P(C) + P(X|\neg C)P(\neg C)}
+\end{align*}
+
+(3)
+
+\begin{align*}
+	P(Y) &= P(Y|X)P(X|C)P(C) + P(Y|X)P(X|\neg C)P(\neg C) \\
+	 &+ P(Y|\neg X)P(\neg X|C)P(C) + P(Y|\neg X)P(\neg X|\neg C)P(\neg C)\\
+	 \\
+	 P(Y,C) &= P(X,Y,C) + P(\neg X, Y, C)\\
+		 &=P(Y|X)P(X|C)P(C) + P(Y|\neg X)P(\neg X|C)P(C)\\
+	 P(C|Y) & = \frac{P(Y,C)}{P(Y)}
+\end{align*}
+
+\section{Question3}\label{sec:q3}
+
+(1) $\dfrac{2}{3}$\\
+
+(2) $\dfrac{1}{3}$\\
+
+(3) $\dfrac{50}{77}$\\
+
+(4) $\dfrac{9}{29}$ \\
+
+(5) 	
+\begin{align*}
+	P(Y=1) &= P(Y|X)P(X|C)P(C) + P(Y|X)P(X|\neg C)P(\neg C) \\
+&+ P(Y|\neg X)P(\neg X|C)P(C) + P(Y|\neg X)P(\neg X|\neg C)P(\neg C)\\
+\\
+&= P(Y=1|X=1)P(X=1|C=0)P(C=0) + P(Y=1|X=1)P(X=1|C=1)P(C=1) \\
+&+ P(Y=1|X=0)P(X=0|C=1)P(C=1) + P(Y|X=0)P(X=0|C=0)P(C=0)\\
+\\
+&=\frac{3}{5}\cdot\frac{2}{5}\cdot\frac{1}{3} + \frac{3}{5}\cdot\frac{4}{9}\cdot\frac{2}{3} + \frac{2}{3}\cdot\frac{5}{9}\cdot\frac{2}{3} + \frac{2}{3}\cdot\frac{3}{5}\cdot\frac{1}{3}\\
+\\
+&=\frac{1292}{2025}\\
+	 \\
+	 P(Y=1,C=0) &= P(X,Y,C) + P(\neg X, Y, C)\\
+	 &=P(Y|X)P(X|C)P(C) + P(Y|\neg X)P(\neg X|C)P(C)\\
+	 &=P(Y=1|X=1)P(X=1|C=0)P(C=0) + P(Y=1|X=0)P(X=0|C=0)P(C=0)\\
+	 &=\frac{3}{5}\cdot\frac{2}{5}\cdot\frac{1}{3} + \frac{2}{3}\cdot\frac{3}{5}\cdot\frac{1}{3}\\
+	 &=\frac{16}{75}\\
+	 \\
+P(C=0|Y=1) &= \frac{P(Y=1,C=0)}{P(Y=1)}\\
+		&=\frac{108}{323}
+\end{align*}
+
+\section{Question4}\label{sec:q4}
+(1)
+Since $x_i$ are independent of each other:
+\begin{align*}
+	\log P(D|p)&= \log(P(x_1|p)P(x_2|p)\cdots P(x_n|p))\\
+	&= \log[p^{x_1-4}(1-p)\cdot p^{x_2-4}(1-p)\cdots p^{x_n-4}(1-p)]\\
+	&= \log[p^{(\sum\limits_{i=1}^{n}x_i)-4n}(1-p)^n]\\
+	&= [(\sum\limits_{i=1}^{n}x_i)-4n] \log p + n \log(1-p)
+\end{align*}
+
+(2)
+Denote the base of logorithm as $a$.
+\begin{align*}
+	\dfrac{\partial \log P(D|p)}{\partial p} &= \dfrac{(\sum\limits_{i=1}^{n}x_i)-4n}{p\ln a} - \dfrac{n}{(1-p)\ln a}\\
+	&= \dfrac{[(\sum\limits_{i=1}^{n}x_i)-4n](1-p) - np}{p(1-p)\ln a}\\
+	&= \dfrac{(\sum\limits_{i=1}^{n}x_i)-4n - (\sum\limits_{i=1}^{n}x_ip)+3np}{p(1-p)\ln a}
+	\\
+\end{align*}
+\text{For all $0<p<1$, i.e. $p(1-p)\ne0$, to find the optimal parameter $p$:}
+\\
+\\
+Let $\dfrac{\partial \log P(D|p)}{\partial p} = 0$.
+\\
+We have $p=\dfrac{(\sum\limits_{i=1}^{n}x_i)-4n}{(\sum\limits_{i=1}^{n}x_i)-3n}$ 
+\\
+\\
+\section{Question5}\label{sec:q5}
+For any vector $\vec{x}=
+	\left(
+\begin{matrix}
+	a\\
+	b
+\end{matrix}
+\right)$
+
+\begin{align}
+	(a,b)\left(
+	\begin{matrix}
+		1 & -0.5\\
+		-0.5 & 1
+	\end{matrix}
+	\right)
+	\left(
+	\begin{matrix}
+		a\\
+		b
+	\end{matrix}
+	\right)&=a^2-ab+b^2 > 0 &\text{for all non-zero $\vec{x}$}
+\end{align}
+So it is positive definite and positive semidefinite.
+
+\begin{align}
+		(a,b)\left(
+		\begin{matrix}
+			0 & 1\\
+			1 & 0
+		\end{matrix}
+		\right)
+		\left(
+		\begin{matrix}
+			a\\
+			b
+		\end{matrix}
+		\right)= 2ab
+\end{align}
+Since we can not decide the sign, it is neither positive semidefinite nor positive definite.
+	
+\begin{align}
+	(a,b)\left(
+	\begin{matrix}
+		1 & 1\\
+		1 & 1
+	\end{matrix}
+	\right)
+	\left(
+	\begin{matrix}
+		a\\
+		b
+	\end{matrix}
+	\right)= (a+b)^2
+\end{align}	
+if $a=-b$, the value is 0; otherwise the value is greater than 0.\\
+So it is positive semidefinite.
+\\
+\\
+\section{Question 6}
+\noindent(1)
+Suppose $\vec{x_1}, \vec{x_2} \in A$. Then for any $0\le \theta \le 1$, we have :
+\begin{align*}
+	B(\theta\vec{x_1} + (1-\theta)\vec{x_2}) &= \theta B \vec{x_1} + (1-\theta)B\vec{x_2}\\
+	&= \theta c + (1-\theta) c\\
+	&= c
+\end{align*}
+
+So $\theta\vec{x_1} + (1-\theta)\vec{x_2}$ is also in A. 
+A is a convex set.
+\\\\
+\noindent(2)
+Suppose $\vec{x_1}, \vec{x_2} \in A$. Then for any $0\le \theta \le 1$, we have :
+\begin{align*}
+	B(\theta\vec{x_1} + (1-\theta)\vec{x_2}) &= \theta B \vec{x_1} + (1-\theta)B\vec{x_2}\\
+	&\le \theta c + (1-\theta) c\\
+	&= c
+\end{align*}
+
+So $\theta\vec{x_1} + (1-\theta)\vec{x_2}$ is also in A. 
+A is a convex set.
+\\\\
+\noindent(3)
+Suppose $\vec{x_1}, \vec{x_2} \in A$. Then for any $0\le \theta \le 1$, we have :
+\begin{align*}
+	g(\theta\vec{x_1} + (1-\theta)\vec{x_2}) &\le \theta g(\vec{x_1}) + (1-\theta)g(\vec{x_2})\\
+	&\le \theta c + (1-\theta) c\\
+	&= c
+\end{align*}
+
+So $\theta\vec{x_1} + (1-\theta)\vec{x_2}$ is also in A. 
+A is a convex set.
+\\\\
+\noindent(4)
+Since $x^2$ is a convex function.\\
+Suppose $\vec{x_1}, \vec{x_2} \in A$. Then for any $0\le \theta \le 1$, we have :
+\begin{align*}
+	(\theta\vec{x_1} + (1-\theta)\vec{x_2})^2 &\le \theta (\vec{x_1})^2 + (1-\theta) (\vec{x_2})^2\\
+	&\le \theta c + (1-\theta) c\\
+	&= c
+\end{align*}
+
+So $\theta\vec{x_1} + (1-\theta)\vec{x_2}$ is not always in A. So A is not a convex set.
+\\
+
+\section{Question 7} 
+
+\noindent (1)
+For any two vectors $\vec{x}=(x_1, x_2,\cdots,x_k)$ and $\vec{y}={y_1, y_2,\cdots,y_n}$ in the domain of $f$:
+\begin{align*}
+	f(\theta \vec{x} + (1-\theta)\vec{y}) &= \sum\limits_{i=1}^{n}|\theta\vec{x_i} + (1-\theta)\vec{y_i}| \\
+	&\le \sum\limits_{i=1}^{n}(|\theta \vec{x_i}|) + \sum\limits_{i=1}^{n}(|(1-\theta)y_i|)\\
+	&= \theta \sum\limits_{i=1}^{n}|\vec{x}| + (1-\theta) \sum\limits_{i=1}^{n}|\vec{y}|\\
+	&= \theta f(\vec{x}) + (1-\theta)f(\vec{y})
+\end{align*}
+
+So $f(\vec{x})$ is a convex function.
+\\\\
+(2)
+\begin{align*}
+	\dfrac{\partial^2 f}{\partial x^2} &= \dfrac{e^{-x}(1-e^{-x})}{(1+e^{-x})^3}\begin{cases}
+		>0 & \text{ if }x<0\\
+		\le0 & \text{ otherwise}
+	\end{cases}\\
+\end{align*}
+
+So $f(x)$ is not convex, and $f(x)$ is convex only when $x>0$.
+\\\\
+(3)
+Suppose the base of logarithm is $a$.
+\begin{align*}
+	\dfrac{\partial f}{\partial x} &= \dfrac{(1+e^{-x})\cdot(-e^{-x})}{\ln a}
+	\\
+	\dfrac{\partial^2 f}{\partial x^2} &= e^{-x} + 2e^{-2x} \ge 0
+\end{align*}
+
+So $f(x)$ is convex.
+\\\\
+(4)
+Suppose the base of logarithm is $a$.
+\begin{align*}
+\dfrac{\partial f}{\partial \vec{x}} &= [\dfrac{\partial f}{\partial x_1}, \dfrac{\partial f}{\partial x_2}]^T\\
+&= [-\dfrac{e^{-2x_1}}{\ln a}, -\dfrac{e^{-2x_2}}{\ln a}]^T
+\\\\
+\dfrac{\partial^2 f}{\partial \vec{x}^2} &= \left(
+\begin{matrix}
+	2e^{-2x_1} & 0 \\
+	0 & 2e^{-2x_2}
+\end{matrix}
+\right)\\
+\\\text{For an arbitary vector } \vec{v}=(a,b)^T\\
+\vec{v}^T \dfrac{\partial^2 f}{\partial \vec{x}^2} \vec{v} &= 2e^{-2x_1}a^2
+ + 2e^{-2x_2}b^2  \ge 0
+ \\\text{So } \dfrac{\partial^2 f}{\partial \vec{x}^2} \text{ is positive semidefinite.}
+\end{align*}
+So $f(\vec{x})$ is convex.
+\\
+\section{Question 8}
+Suppose $f = \vec{x}^TA\vec{x}$, we want to prove $\dfrac{\partial f}{\partial {\vec{x}}}=(A+A^T)\vec{x}$.\\
+
+Since $\vec{x}=(x_1,x_2,...,x_n)$,  $f=\vec{x}^TA\vec{x}=\sum\limits_{i=1}^{n}\sum\limits_{j=1}^{n}a_{ij}x_ix_j$\\
+
+$\dfrac{\partial f}{\partial x_k}=\sum\limits_{i-1}^{n}a_{ki}x_i + \sum\limits_{j=1}^{n}a_{jk}x_j$ for all k = 1,2...n\\
+
+so $\dfrac{df}{d{\vec{x}}}=A^T\vec{x} + A\vec{x} = (A^T+A)\vec{x}$.
+
+
+\end{document}

@@ -1,0 +1,75 @@
+\documentclass{amsart}
+\usepackage{fullpage}
+\usepackage[procnames]{listings}
+\usepackage{color}
+\newcommand{\set}[1]{\ensuremath{\left\{#1\right\}}}
+\newtheorem{quest}{Question}
+\usepackage{mathtools}
+\DeclarePairedDelimiter\norm{\lVert}{\rVert}%
+
+\begin{document}
+\title{CSE584 Homework 4}
+\author{Chen Sun\\cxs1031@psu.edu}
+\maketitle
+
+
+\section{Question 1}
+According to lectures, we need to compute $\Lambda (q, \theta)$ First.
+
+For this question, we have approximation: $q(\beta_2, \mu_2, \sigma^2_2) = \dfrac{\beta_2^k}{\Gamma(k)}\tau^{k-1}e^{-\beta_2\tau}\dfrac{1}{\sqrt{2\pi}\sigma_2}e^{-\frac{(y-\mu_2)^2}{2\sigma_2^2}}$
+
+\begin{align*}
+	\Lambda(q, \theta) &= \Lambda(q(\beta_2, \mu_2, \sigma^2_2), \beta, \mu, \sigma) \\
+	&= \int_0^\infty \int_{-\infty}^{\infty} \dfrac{\beta_2^k}{\Gamma(k)}\tau^{k-1}e^{-\beta_2\tau}\dfrac{1}{\sqrt{2\pi}\sigma_2}e^{-\frac{(y-\mu_2)^2}{2\sigma_2^2}} \log \dfrac{(\prod_{i=1}^{n}\sqrt{\frac{\tau}{2\pi}}e^{-\frac{\tau(x_i-y)^2}{2}})\dfrac{\beta^k}{\Gamma(k)}\tau^{k-1}e^{-\beta\tau}\dfrac{1}{\sqrt{2\pi}\sigma}e^{-\frac{(y-\mu)^2}{2\sigma^2}}}{\dfrac{\beta_2^k}{\Gamma(k)}\tau^{k-1}e^{-\beta_2\tau}\dfrac{1}{\sqrt{2\pi}\sigma_2}e^{-\frac{(y-\mu_2)^2}{2\sigma_2^2}}}  dyd\tau \\
+	&= \int_0^\infty \int_{-\infty}^{\infty} \dfrac{\beta_2^k}{\Gamma(k)}\tau^{k-1}e^{-\beta_2\tau}\dfrac{1}{\sqrt{2\pi}\sigma_2}e^{-\frac{(y-\mu_2)^2}{2\sigma_2^2}}\\
+	& \left[ \frac{n}{2}\log\tau - \frac{n}{2}\log2\pi- \sum_{i=1}^{n}\dfrac{(x_i-y)^2\tau}{2} + \log\sigma_2 - \log\sigma + k\log\beta -k\log\beta_2 + \dfrac{(y-\mu_2)^2}{2\sigma_2^2} - (\beta-\beta_2)\tau - \dfrac{(y-\mu)^2}{2\sigma^2}\right]  dyd\tau \\
+	&= \frac{n}{2}\psi(k) - \frac{n}{2}\log\beta - \frac{n}{2}\log 2\pi -\frac{nk}{2\beta}\mu_2^2 -\frac{nk}{2\beta}\sigma_2^2 -\frac{k}{2\beta}\sum_{i=1}^{n}x_i^2 + \frac{k}{\beta}\mu_2\sum_{i=1}^{n}x_i + \log\sigma_2 - \log\sigma + k\log\beta -k\log\beta_2 \\
+	& + \frac{1}{2} - (\beta - \beta_2)\frac{k}{\beta} - \frac{\mu_2^2}{2\sigma^2} - \frac{\sigma_2^2}{2\sigma^2} - \frac{\mu^2}{2\sigma^2} + \frac{\mu\mu_2}{\sigma^2}\\
+	&= - \frac{n}{2}\log\beta -\frac{nk}{2\beta}\mu_2^2 -\frac{nk}{2\beta}\sigma_2^2 -\frac{k}{2\beta}\sum_{i=1}^{n}x_i^2 + \frac{k}{\beta}\mu_2\sum_{i=1}^{n}x_i + \log\sigma_2 - \log\sigma + k\log\beta -k\log\beta_2 + \frac{\beta_2 k}{\beta}\\
+	& - \frac{\mu_2^2}{2\sigma^2} - \frac{\sigma_2^2}{2\sigma^2} - \frac{\mu^2}{2\sigma^2} + \frac{\mu\mu_2}{\sigma^2} + C,\text{where C is some constant}
+\end{align*}
+
+Since we want to minimize $\Lambda(q, \theta)$, so that constant $C$ does not matter and can be removed.
+
+Next, take derivative to update $\beta, \mu, \sigma, \beta_2, \mu_2, \sigma_2$.
+
+(1)
+\begin{align*}
+	\dfrac{d\Lambda}{d\beta} &= (k-\frac{n}{2})\frac{1}{\beta} - \frac{1}{\beta^2}(-\frac{nk\mu_2^2}{2} - \frac{nk\sigma_2^2}{2} - \frac{k}{2}\sum_{i=1}^{n}x_i^2 + k\mu\sum_{i=1}^{n}x_i + \beta_2k) = 0\\
+	\beta &\leftarrow \dfrac{-\frac{nk\mu_2^2}{2} - \frac{nk\sigma_2^2}{2} - \frac{k}{2}\sum_{i=1}^{n}x_i^2 + k\mu\sum_{i=1}^{n}x_i + \beta_2k}{k-\frac{n}{2}}\\
+\end{align*}
+
+
+(2)
+\begin{align*}
+	\dfrac{d\Lambda}{d\mu} &= -\frac{\mu}{\sigma^2} + \frac{\mu_2}{\sigma^2} = 0\\
+	\mu &\leftarrow \mu_2
+\end{align*}
+
+(3)
+Let $t=\sigma^2$
+\begin{align*}
+	\dfrac{d\Lambda}{dt} &= -\frac{1}{t} - \frac{1}{t^2}(-\frac{\mu_2^2}{2}-\frac{\sigma_2^2}{2} - \frac{\mu^2}{2} + \mu\mu_2) = 0\\
+	t &= \sigma^2 \leftarrow \frac{\mu_2^2}{2}+\frac{\sigma_2^2}{2} + \frac{\mu^2}{2} - \mu\mu_2
+\end{align*}
+
+(4)
+\begin{align*}
+	\dfrac{d\Lambda}{d\beta_2} &= -\frac{k}{\beta_2} + \frac{k}{\beta} = 0 \\
+	\beta_2 &\leftarrow \beta
+\end{align*}
+
+(5)
+\begin{align*}
+	\dfrac{d\Lambda}{d\mu_2} &= (-\frac{nk}{2\beta}-\frac{1}{2\sigma^2})\mu_2 + \frac{k}{\beta}\sum_{i=1}^{n}x_i + \frac{\mu}{\sigma^2} = 0\\
+	\mu_2 &\leftarrow \dfrac{\frac{k}{\beta}\sum_{i=1}^{n}x_i + \frac{\mu}{\sigma^2}}{\frac{nk}{2\beta}+\frac{1}{2\sigma^2}}
+\end{align*}
+
+(6)
+Let $t_2 = \sigma_2^2$.
+\begin{align*}
+	\dfrac{d\Lambda}{dt_2} &= -\frac{nk}{2\beta} + \frac{1}{t} - \frac{1}{2\sigma^2} = 0\\
+	t_2 &= \sigma_2^2 \leftarrow \dfrac{2\beta\sigma^2}{nk\sigma^2 + \beta} 
+\end{align*}
+
+\end{document}

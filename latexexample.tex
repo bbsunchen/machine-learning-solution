@@ -1,0 +1,80 @@
+\documentclass{amsart}
+\usepackage{fullpage}
+\usepackage{color}
+\newcommand{\set}[1]{\ensuremath{\left\{#1\right\}}}
+\newtheorem{quest}{Question}
+\begin{document}
+\title{Latex Example}
+\author{Your Name}
+\maketitle
+
+%this is a comment
+
+\section{Question 1}\label{sec:q1}
+Each homework answer should be a section. Do not rearrange the order in which you answer homework questions (i.e. answer question 2 first, then question 3, and answer question 1 last). That will just make things confusing.
+
+This is Section \ref{sec:q1}. Note how the source code uses the label and ref commands. Latex is very easy to use once you get used to it. You can either type it in a text file or use an editor.
+
+This is a new paragraph because of the preceding blank line. This text is \textit{italic}, \textbf{bold}, \underline{underlined}. You can have \texttt{monospace text} that is code for code. 
+\begin{verbatim}
+You can
+also have
+larger
+blocks like that using the verbatim environment
+\end{verbatim}
+
+This is a bulleted list:
+\begin{itemize}
+\item first item
+\item second item
+\item You must have at least one item or this will not compile
+\end{itemize}
+
+This is a numbered list:
+\begin{enumerate}
+\item first
+\item second
+\end{enumerate}
+
+\section{Inline Math}\label{sec:inline}
+You can have math within text like this: $1^{32}+x_{var}^47 = 3$, we also have symbols $=, \leq, \geq, <, >$. This is a set: $\set{1,2,3}$. Within text, math needs to be enclosed in dollar signs.
+
+
+This is a vector $\vec{x}$. This is a dot product $\vec{x}\cdot\vec{y}$. This is a fraction $\frac{1}{2}$. We can make other dots: $\dots$ and $\cdots$ and $\vdots$
+\section{Separate equations}\label{sec:equation}
+We now prove $(1+1)+1=3$. Add two backslashes to start a new line in the equations:
+\begin{align*}
+(1+1)+1 &= (2) + 1 & \text{(this is known)}\\
+        &=2+1 &\text{note how the ampersand symbol aligns things}\\
+        &=3
+\end{align*}
+Check out how text within equations was added in the previous lines.
+
+We can do the same with equation numbering (we use align instead of align*):
+
+\begin{align}
+(1+1)+1 &= (2) + 1 & (improperly added text)\label{eqn:thing}\\
+        &=2+1 \nonumber\\
+        &=3\nonumber
+\end{align}
+We assigned a number to Equation \ref{eqn:thing}.
+
+\section{Other useful patterns}.
+\begin{align*}
+x &= \sum\limits_{i=1}^{n} y_{i}\prod\limits_{j=1}^{32} \beta_{j}\\
+z &= \begin{cases}
+      1 & \text{ if }a<b\\
+      2 & \text{ otherwise}
+     \end{cases}\\
+y &= \arg \min\limits_{\alpha} \frac{1+\alpha}{\alpha + \log(\alpha) + \sin(\alpha)}\\
+q &= \left( 3^8 \right) * \left[6_4^8\right] & \text{left and right rescale parentheses}\\
+R &= \left(
+     \begin{matrix}
+     1 & 2 & 3\\
+     4 & 5 & 6
+     \end{matrix}
+     \right)\\
+a &\leq \int_{0}^{\infty} \frac{df(x)}{dx} \frac{\partial g(y,z)}{\partial z}~dy\\
+s &= \text{spaces in math mode:}|~|\quad|\qquad|.
+\end{align*}
+\end{document}

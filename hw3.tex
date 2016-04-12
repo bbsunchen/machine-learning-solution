@@ -1,0 +1,115 @@
+\documentclass{amsart}
+\usepackage{fullpage}
+\usepackage[procnames]{listings}
+\usepackage{color}
+\newcommand{\set}[1]{\ensuremath{\left\{#1\right\}}}
+\newtheorem{quest}{Question}
+\usepackage{mathtools}
+\DeclarePairedDelimiter\norm{\lVert}{\rVert}%
+
+\begin{document}
+\title{CSE584 Homework 3}
+\author{Chen Sun\\cxs1031@psu.edu}
+\maketitle
+
+
+\section{Question 1}
+
+\begin{align*}
+	\arg \min\limits_{x} \frac{1}{2} \norm{Ax-t}_2^2 \text{ such that } \norm{x}_2 \le \lambda
+\end{align*}
+
+Since $\norm{x}_2 \le \lambda$ is a convex set.
+
+Denote indicator function $I_c(x) = \begin{cases}
+0 & \text{ if } x \in C\\
+\infty & \text{ if } x \notin C
+
+\end{cases}\text{,where } C=\{x|\norm{x}_2 \le \lambda\}$ 
+
+Original problem is equal to:
+
+\begin{align*}
+		\arg \min\limits_{x} \frac{1}{2} \norm{Ax-t}_2^2 + I_c(x)
+\end{align*} 
+
+Which is equal to:
+
+\begin{align*}
+	\arg \min\limits_{x} \frac{1}{2} \norm{Ax-t}_2^2 + I_c(z)\text{ subject to } x = z
+\end{align*} 
+
+Using ADMM:
+
+\begin{align*}
+D(x,z,\alpha) = \frac{1}{2} \norm{Ax-t}_2^2 + I_c(z) + \frac{\rho}{2}\norm{x-z+\alpha}_2^2
+\end{align*} 
+
+To derive update step of ADMM:
+
+\begin{align*}
+x_{k+1} &= \arg \min\limits_{x} \frac{1}{2} \norm{Ax-t}_2^2 + \frac{\rho}{2}\norm{x-z_k+\alpha_k}_2^2\\
+z_{k+1} &= \arg \min\limits_{z} I_c(x) + \frac{\rho}{2}\norm{x_{k+1}-z+\alpha_k}_2^2\\
+\alpha_{k+1} &= \alpha_k + (x_{k+1} - z_{k+1})
+\end{align*} 
+
+So we have the update step of ADMM:
+	
+\begin{align*}
+	x_{k+1} &= (A^TA + \rho I)^{-1}(A^Tt + \rho z_k - \rho \alpha_k)\\
+	z_{k+1} &= \Pi_C(x_{k+1}+\alpha_k)\\
+	\alpha_{k+1} &= \alpha_k + (x_{k+1} - z_{k+1})
+\end{align*}
+
+\section{Question 2}
+\subsection{ADMM}
+\begin{align*}
+y &= \arg \min\limits_{x} \frac{1}{2} \norm{Ax-t}_2^2 + \lambda_1 \norm{x}_2 + \lambda_2 \norm{x}_1\\
+y &= \arg \min\limits_{x} \frac{1}{2} \norm{Ax-t}_2^2 + \lambda_1 \norm{y}_2 + \lambda_2 \norm{z}_1, \text{such that } x=z, x=y.\\
+\end{align*}
+\text{Apply scalar version of ADMM and form the dual function: }
+\begin{align*}
+	D(x, y, z, \alpha, \beta) = \frac{1}{2} \norm{Ax-t}_2^2 + \lambda_1 \norm{y}_2 + \lambda_2 \norm{z}_1 + \frac{\rho}{2}\norm{x-y+\alpha}_2^2 + \frac{\rho}{2}\norm{x-z+\beta}_2^2
+\end{align*}
+\text{The update of ADMM:}
+\begin{align*}
+	x_{k+1} &= \arg \min\limits_{x} \frac{1}{2} \norm{Ax-t}_2^2 + \frac{\rho}{2}\norm{x-y_{k}+\alpha_{k}}_2^2 + \frac{\rho}{2}\norm{x-z_{k}+\beta_{k}}_2^2\\
+	y_{k+1} &= \arg \min\limits_{y} \lambda_1 \norm{y}_2 + \frac{\rho}{2}\norm{x_{k+1}-y+\alpha_k}_2^2\\
+	z_{k+1} &= \arg \min\limits_{z} \lambda_2 \norm{z}_1 + \frac{\rho}{2}\norm{x_{k+1}-z+\beta_k}_2^2\\
+	\alpha_{k+1} &= \alpha_k + (x_{k+1} - y_{k+1})\\
+	\beta_{k+1} &= \beta_k + (x_{k+1} - z_{k+1})
+\end{align*}
+\text{So we have the update of ADMM:}
+\begin{align*}
+	x_{k+1} &= (A^TA+ 2\rho I)^{-1}( A^Tt + \rho (y_{k}+z_{k}-\alpha_{k}-\beta_{k}))\\
+	y_{k+1} &= \begin{cases}
+	0 & \text{ if }\norm{r_k}_2 \le \frac{\lambda_1}{\rho}\\
+	(1-\dfrac{\lambda_1}{\rho \norm{r_k}_2})r_k & \text{ otherwise}
+	\end{cases} \text{,where } r_k=x_{k+1} + \alpha_k\\
+	z_{k+1} &= S_{\lambda_2/\rho}(x_{k+1} + \beta_k) = \begin{cases}
+	x_{k+1} + \beta_k - \frac{\lambda_2}{\rho} \text{ sign}(x_{k+1} + \beta_k)& \text{ if }\norm{x_{k+1} + \beta_k}_2 > \lambda_2\\
+	0 & \text{ otherwise}
+	\end{cases}\\
+	\alpha_{k+1} &= \alpha_k + (x_{k+1} - y_{k+1})\\
+	\beta_{k+1} &= \beta_k + (x_{k+1} - z_{k+1})
+\end{align*}
+
+\subsection{Convergence}
+
+Since $y$ and $z$ condition are automatically maintained by ADMM.
+
+So we need to monitor the following quantities:
+\begin{enumerate}
+	\item $\rho(y_{k+1}-y_{k}) + \rho(z_{k+1}-z_k)$ close to 0
+	\item $x-y$ close to 0
+	\item $x-z$ close to 0
+\end{enumerate}
+
+\subsection{Sparsity properties} Based on the ADMM solution.
+
+Since $l_1$ norm introduce sparsity. The sparsity properties of this ADMM solution will be similar with the sparsity properties of solution of normal LASSO.
+
+The sparsity introduced by $l_1$ norm is in the update step of $z_{k+1}$.
+
+
+\end{document}
